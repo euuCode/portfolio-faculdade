@@ -12,7 +12,7 @@ Thumbs.db
 *.swp
 *~
 
-# Ignora pastas de deploy (caso use build futuramente)
+# Ignora pastas de deploy 
 dist/
 build/
 node_modules/
