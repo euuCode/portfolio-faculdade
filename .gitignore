@@ -1,0 +1,21 @@
+# Ignora arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Ignora arquivos do VS Code
+.vscode/
+
+# Ignora arquivos temporários e backups
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Ignora pastas de deploy (caso use build futuramente)
+dist/
+build/
+node_modules/
+
+# Ignora arquivos do sistema operacional
+desktop.ini
