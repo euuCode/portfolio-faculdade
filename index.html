@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="container">
-        
         <div class="carousel">
             <button class="prev" onclick="mudarImagem(-1)">❮</button>
             <img id="foto-perfil" class="foto" src="https://avatars.githubusercontent.com/u/161401869?v=4" alt="Foto de Perfil">
@@ -31,22 +30,31 @@
             </tr>
             <tr>
                 <td><strong>Email:</strong></td>
-                <td>euumarcin.suporte@outlook.com</td>
+                <td><input type="email" id="email" value="euumarcin.suporte@outlook.com" onblur="validarEmail()"></td>
+            </tr>
+            <tr>
+                <td><strong>CPF:</strong></td>
+                <td><input type="text" id="cpf" placeholder="000.000.000-00" onblur="validarCPF()"></td>
             </tr>
         </table>
 
         <h2>UCs Cursadas</h2>
-        <ul class="lista">
-            <li>Modelagem de Software</li>
-            <li>Programação de Soluções Computacionais</li>
-            <li>Sistemas Distribuídos e Mobile</li>
-            <li>Usabilidade, Desenvolvimento Web, Mobile e Jogos</li>
-            <li>Sistemas Computacionais e Segurança</li>
-            <li>Ambientes Computacionais e Conectividade</li>
+        <button onclick="adicionarUC()">Adicionar Nova UC</button>
+        <ul class="lista" id="lista-ucs">
+            <li data-index="0">Modelagem de Software <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
+            <li data-index="1">Programação de Soluções Computacionais <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
+            <li data-index="2">Sistemas Distribuídos e Mobile <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
+            <li data-index="3">Usabilidade, Desenvolvimento Web, Mobile e Jogos <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
+            <li data-index="4">Sistemas Computacionais e Segurança <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
+            <li data-index="5">Ambientes Computacionais e Conectividade <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button></li>
         </ul>
 
         <h2>Sobre Mim</h2>
-        <p>Gosto bastante de conhecer lugares que me conectam mais com a vida, natureza e minha família. Um hobby que se encaixa no meu objetivo é estudar cibersegurança e tentar a prova da CompTIA Security+.</p>
+        <p id="perfil-pessoal">Gosto bastante de conhecer lugares que me conectam mais com a vida, natureza e minha família. Um hobby que se encaixa no meu objetivo é estudar cibersegurança e tentar a prova da CompTIA Security+.</p>
+        <div class="novo-perfil">
+            <textarea id="nova-descricao" placeholder="Adicione novas informações ao seu perfil pessoal"></textarea>
+            <button onclick="adicionarDescricao()">Adicionar Descrição</button>
+        </div>
 
         <h2>Objetivo Profissional</h2>
         <p>Pós-graduação em Segurança da Informação e Direito Digital.</p>
@@ -70,6 +78,69 @@
         function mudarImagem(direcao) {
             indice = (indice + direcao + imagens.length) % imagens.length;
             document.getElementById("foto-perfil").src = imagens[indice];
+        }
+
+        function adicionarUC() {
+            const novaUC = prompt("Digite o nome da nova UC:");
+            if (novaUC && novaUC.trim() !== "") {
+                const lista = document.getElementById("lista-ucs");
+                const novoIndex = lista.children.length;
+                const li = document.createElement("li");
+                li.setAttribute("data-index", novoIndex);
+                li.innerHTML = `${novaUC} <button class="move-up" onclick="moverUC(this, -1)">↑</button><button class="move-down" onclick="moverUC(this, 1)">↓</button>`;
+                lista.appendChild(li);
+            } else {
+                alert("Por favor, insira um nome válido para a UC.");
+            }
+        }
+
+        function moverUC(botao, direcao) {
+            const li = botao.parentElement;
+            const lista = document.getElementById("lista-ucs");
+            const index = parseInt(li.getAttribute("data-index"));
+            const novoIndex = index + direcao;
+
+            if (novoIndex >= 0 && novoIndex < lista.children.length) {
+                const outroLi = lista.children[novoIndex];
+                li.setAttribute("data-index", novoIndex);
+                outroLi.setAttribute("data-index", index);
+                if (direcao === -1) {
+                    lista.insertBefore(li, outroLi);
+                } else {
+                    lista.insertBefore(outroLi, li);
+                }
+            }
+        }
+
+        function validarCPF() {
+            const cpfInput = document.getElementById("cpf");
+            const cpf = cpfInput.value;
+            const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+            if (!cpfRegex.test(cpf)) {
+                alert("CPF inválido! Use o formato 000.000.000-00.");
+                cpfInput.focus();
+            }
+        }
+
+        function validarEmail() {
+            const emailInput = document.getElementById("email");
+            const email = emailInput.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("E-mail inválido! Use o formato exemplo@dominio.com.");
+                emailInput.focus();
+            }
+        }
+
+        function adicionarDescricao() {
+            const novaDescricao = document.getElementById("nova-descricao").value;
+            if (novaDescricao && novaDescricao.trim() !== "") {
+                const perfilPessoal = document.getElementById("perfil-pessoal");
+                perfilPessoal.textContent += " " + novaDescricao.trim();
+                document.getElementById("nova-descricao").value = "";
+            } else {
+                alert("Por favor, insira uma descrição válida.");
+            }
         }
     </script>
 </body>
